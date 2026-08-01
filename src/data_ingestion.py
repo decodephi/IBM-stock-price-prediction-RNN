@@ -16,7 +16,6 @@ from pathlib import Path
 import pandas as pd
 import yaml
 from logger import logger
-
 #data_path = "data/raw/IBM.csv"
 
 
