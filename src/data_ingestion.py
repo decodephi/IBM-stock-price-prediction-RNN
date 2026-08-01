@@ -11,15 +11,12 @@ Note -Here only read the raw data and store it in the project's data pipeline.
 
 
 #To handles file paths && load the data 
-from pathlib import Path
-import pandas as pd
-
-#create a class 
 
 from pathlib import Path
 import pandas as pd
+import yaml
 
-data_path = "data/raw/IBM.csv"
+#data_path = "data/raw/IBM.csv"
 
 
 class DataIngestion:
@@ -27,8 +24,12 @@ class DataIngestion:
     Responsible for reading the raw dataset.
     """
 
-    def __init__(self, file_path: str):
-        self.file_path = Path(file_path)
+    def __init__(self, config_path="config/config.yaml"):
+        
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)
+            
+        self.file_path = Path(config["data_ingestion"]["raw_data_path"])
 
     def load_data(self) -> pd.DataFrame:
         """
@@ -50,7 +51,7 @@ class DataIngestion:
 
 if __name__ == "__main__":
 
-    ingestion = DataIngestion(data_path)
+    ingestion = DataIngestion()
 
     df = ingestion.load_data()
 

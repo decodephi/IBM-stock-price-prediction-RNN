@@ -5,3 +5,6 @@ statsmodels
 tensorflow 
 matplotlib 
 seaborn
+
+##dyamic
+pyyaml
