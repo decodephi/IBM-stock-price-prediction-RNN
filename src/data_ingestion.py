@@ -16,6 +16,8 @@ from pathlib import Path
 import pandas as pd
 import yaml
 from logger import logger
+import sys
+from exception import CustomException
 #data_path = "data/raw/IBM.csv"
 
 
@@ -24,8 +26,6 @@ class DataIngestion:
     Responsible for reading the raw dataset.
     """
     
-    
-
     def __init__(self, config_path="config/config.yaml"):
         
         with open(config_path, "r") as file:
@@ -37,19 +37,29 @@ class DataIngestion:
         """
         Load the dataset into a Pandas DataFrame.
         """
+        
+        try:
+            logger.info("Loading dataset...")
 
-        if not self.file_path.exists():
-            raise FileNotFoundError(
+            if not self.file_path.exists():
+               raise FileNotFoundError(
                 f"Dataset not found: {self.file_path}"
             )
+            
+            df = pd.read_csv(self.file_path, parse_dates=["Date"])
+
+            logger.info("Dataset loaded successfully")
+
+
+            return df
+            
+        except Exception as e:
+            
+            logger.error(e)
+            raise CustomException(e, sys)
+            
         
-        logger.info("Loading dataset...")
-        df = pd.read_csv(self.file_path, parse_dates=["Date"])
 
-        logger.info("Dataset loaded successfully")
-
-
-        return df
 
 
 if __name__ == "__main__":
