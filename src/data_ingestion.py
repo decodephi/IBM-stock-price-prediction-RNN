@@ -20,6 +20,8 @@ import sys
 from exception import CustomException
 #data_path = "data/raw/IBM.csv"
 
+from data_validation import DataValidation
+
 
 class DataIngestion:
     """
@@ -58,8 +60,17 @@ class DataIngestion:
             logger.error(e)
             raise CustomException(e, sys)
             
-        
+'''      
+# Data Ingestion
+ingestion = DataIngestion()
+df = ingestion.load_data()
 
+# Data Validation
+validator = DataValidation(df)
+
+validator.validate()
+
+ '''   
 
 
 if __name__ == "__main__":
