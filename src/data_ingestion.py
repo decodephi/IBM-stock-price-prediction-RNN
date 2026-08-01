@@ -15,6 +15,7 @@ Note -Here only read the raw data and store it in the project's data pipeline.
 from pathlib import Path
 import pandas as pd
 import yaml
+from logger import logger
 
 #data_path = "data/raw/IBM.csv"
 
@@ -23,6 +24,8 @@ class DataIngestion:
     """
     Responsible for reading the raw dataset.
     """
+    
+    
 
     def __init__(self, config_path="config/config.yaml"):
         
@@ -40,11 +43,12 @@ class DataIngestion:
             raise FileNotFoundError(
                 f"Dataset not found: {self.file_path}"
             )
-
+        
+        logger.info("Loading dataset...")
         df = pd.read_csv(self.file_path, parse_dates=["Date"])
 
-        print("Dataset Loaded Successfully")
-        print(f"Shape : {df.shape}")
+        logger.info("Dataset loaded successfully")
+
 
         return df
 
