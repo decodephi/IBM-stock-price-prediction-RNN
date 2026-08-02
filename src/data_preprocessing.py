@@ -19,7 +19,7 @@ from exception import CustomException
 class DataPreprocessing:
     """
     Responsible for preprocessing the dataset.
-    Step 3.1: Convert Date column to datetime.
+   
     """
 
     def __init__(self, df):
@@ -33,14 +33,25 @@ class DataPreprocessing:
         try:
 
             logger.info("Starting Data Preprocessing...")
-
             logger.info("Converting 'Date' column to datetime.")
 
-            self.df["Date"] = pd.to_datetime(self.df["Date"])
+            self.df["Date"] = pd.to_datetime(self.df["Date"], errors="raise")
+            
+            # Remove duplicate rows
+            duplicate_count = self.df.duplicated().sum()
+            logger.info(f"Duplicate rows before removal: {duplicate_count}")
+            self.df.drop_duplicates(inplace=True)
+            logger.info("Duplicate rows removed successfully.")
 
-            logger.info("Date column converted successfully.")
+            # Handle missing values
+            missing_before = self.df.isnull().sum().sum()
+            logger.info(f"Total missing values before handling: {missing_before}")
+            self.df.dropna(inplace=True)
+            missing_after = self.df.isnull().sum().sum()
+            logger.info(f"Total missing values after handling: {missing_after}")
 
-            logger.info("Data Preprocessing Step 3.1 Completed.")
+            logger.info("Missing values handled successfully.")
+            
 
             return self.df
 
