@@ -15,6 +15,9 @@ import pandas as pd
 from logger import logger
 from exception import CustomException
 
+import yaml
+import os
+
 
 class DataPreprocessing:
     """
@@ -23,7 +26,11 @@ class DataPreprocessing:
     """
 
     def __init__(self, df):
-        self.df = df
+     
+        with open("config/config.yaml", "r") as file:
+            config = yaml.safe_load(file)
+
+        self.processed_data_path = config["data_preprocessing"]["processed_data_path"]
 
     def preprocess(self):
         """
@@ -52,11 +59,20 @@ class DataPreprocessing:
 
             logger.info("Missing values handled successfully.")
             
+            
+            # Create processed directory if it doesn't exist
+            os.makedirs(os.path.dirname(self.processed_data_path), exist_ok=True)
+            # Save processed dataset
+            self.df.to_csv(self.processed_data_path, index=False)
+
+            logger.info(
+                f"Processed dataset saved to: {self.processed_data_path}"
+            )
+            
 
             return self.df
 
         except Exception as e:
 
             logger.error(e)
-
             raise CustomException(e, sys)
