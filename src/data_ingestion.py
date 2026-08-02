@@ -21,6 +21,7 @@ from exception import CustomException
 #data_path = "data/raw/IBM.csv"
 
 from data_validation import DataValidation
+from data_preprocessing import DataPreprocessing
 
 
 class DataIngestion:
@@ -60,17 +61,18 @@ class DataIngestion:
             logger.error(e)
             raise CustomException(e, sys)
             
-'''      
-# Data Ingestion
+     
+"""# Data Ingestion
 ingestion = DataIngestion()
 df = ingestion.load_data()
 
 # Data Validation
 validator = DataValidation(df)
-
 validator.validate()
 
- '''   
+# Data Preprocessing
+preprocessor = DataPreprocessing(df)
+df = preprocessor.preprocess()"""
 
 
 if __name__ == "__main__":

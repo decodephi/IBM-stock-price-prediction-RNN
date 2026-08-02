@@ -26,6 +26,8 @@ class DataPreprocessing:
     """
 
     def __init__(self, df):
+        
+        self.df = df
      
         with open("config/config.yaml", "r") as file:
             config = yaml.safe_load(file)
