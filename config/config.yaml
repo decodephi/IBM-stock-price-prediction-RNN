@@ -1,2 +1,5 @@
 data_ingestion:
   raw_data_path: data/raw/IBM.csv
+
+data_preprocessing:
+  processed_data_path: data/processed/processed_data.csv
