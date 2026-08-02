@@ -62,8 +62,12 @@ class DataPreprocessing:
             logger.info("Missing values handled successfully.")
             
             
-            # Create processed directory if it doesn't exist
-            os.makedirs(os.path.dirname(self.processed_data_path), exist_ok=True)
+            if os.path.exists(self.processed_data_path):
+                os.remove(self.processed_data_path)
+                logger.info("Old processed dataset removed.")
+            
+  #          # Create processed directory if it doesn't exist
+#            os.makedirs(os.path.dirname(self.processed_data_path), exist_ok=True)
             # Save processed dataset
             self.df.to_csv(self.processed_data_path, index=False)
 
