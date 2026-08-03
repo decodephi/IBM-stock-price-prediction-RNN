@@ -30,6 +30,14 @@ class FeatureEngineering:
             self.df["DayOfWeek"] = self.df["Date"].dt.dayofweek
 
             logger.info("Calendar features created successfully.")
+            ##########################################################
+            logger.info("Creating lag features...")
+
+            self.df["Lag_1"] = self.df["Close"].shift(1)
+            self.df["Lag_7"] = self.df["Close"].shift(7)
+            self.df["Lag_30"] = self.df["Close"].shift(30)
+
+            logger.info("Lag features created successfully.")
 
             os.makedirs(
                 os.path.dirname(self.output_path),
