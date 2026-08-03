@@ -12,6 +12,11 @@ from sklearn.preprocessing import MinMaxScaler
 
 import numpy as np
 
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.callbacks import EarlyStopping
+
 class ModelTraining:
     """
     Responsible for loading the feature engineered dataset.
@@ -30,6 +35,10 @@ class ModelTraining:
         )
         self.scaler_path = config["artifacts"]["scaler_path"]
         self.window_size = config["model_training"]["window_size"]
+        
+        self.epochs = config["model_training"]["epochs"]
+        self.batch_size = config["model_training"]["batch_size"]
+        self.lstm_model_path = config["models"]["lstm_model_path"]
         
 
     def load_feature_data(self):
@@ -193,6 +202,84 @@ class ModelTraining:
 
             logger.error(e)
             raise CustomException(e, sys)
+        
+    def train_lstm(self, X_train, y_train, X_test, y_test):
+        """
+        Train an LSTM model.
+        """
+
+        try:
+            logger.info("Building LSTM model...")
+            model = Sequential()
+
+            model.add(
+                LSTM(
+                    units=64,
+                    return_sequences=False,
+                    input_shape=(X_train.shape[1], X_train.shape[2])
+                )
+            )
+
+            model.add(Dropout(0.2))
+            model.add(Dense(32, activation="relu"))
+            model.add(Dense(1))
+
+            model.compile(
+                optimizer="adam",
+                loss="mse",
+                metrics=["mae"]
+            )
+
+            logger.info("LSTM model built successfully.")
+
+            early_stop = EarlyStopping(
+                monitor="val_loss",
+                patience=10,
+                restore_best_weights=True
+            )
+
+            logger.info("Training LSTM model...")
+
+            history = model.fit(
+                X_train,
+                y_train,
+                validation_data=(X_test, y_test),
+                epochs=self.epochs,
+                batch_size=self.batch_size,
+                callbacks=[early_stop],
+                verbose=1
+            )
+
+            logger.info("Model training completed.")
+
+            return model, history
+
+        except Exception as e:
+            logger.error(e)
+            raise CustomException(e, sys)
+
+    def save_model(self, model):
+        """
+        Save the trained model.
+        """
+
+        try:
+            logger.info("Saving trained model...")
+
+            os.makedirs(
+                os.path.dirname(self.lstm_model_path),
+                exist_ok=True
+            )
+
+            model.save(self.lstm_model_path)
+
+            logger.info(
+                f"LSTM model saved at {self.lstm_model_path}"
+            )
+
+        except Exception as e:
+            logger.error(e)
+            raise CustomException(e, sys)
 
 
 
@@ -223,6 +310,16 @@ if __name__ == "__main__":
         X_test_scaled,
         y_test
     )
+    
+    model, history = trainer.train_lstm(
+    X_train_seq,
+    y_train_seq,
+    X_test_seq,
+    y_test_seq
+    )
+
+# Save Model
+    trainer.save_model(model)
 
     print(df.head())
     
