@@ -3,3 +3,6 @@ data_ingestion:
 
 data_preprocessing:
   processed_data_path: data/processed/processed_data.csv
+
+feature_engineering:
+  featured_data_path: data/features/featured_data.csv
