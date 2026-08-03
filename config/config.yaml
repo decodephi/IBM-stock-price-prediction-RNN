@@ -8,10 +8,12 @@ feature_engineering:
   featured_data_path: data/features/featured_data.csv
 
 model_training:
-  feature_data_path: data/features/featured_data.csv
-
-model_training:
-  feature_data_path: data/features/featured_data.csv
+  window_size: 60
+  epochs: 50
+  batch_size: 32
 
 artifacts:
   scaler_path: artifacts/scaler.pkl
+
+models:
+  lstm_model_path: models/lstm.keras

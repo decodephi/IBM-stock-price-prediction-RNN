@@ -10,6 +10,7 @@ import joblib
 
 from sklearn.preprocessing import MinMaxScaler
 
+import numpy as np
 
 class ModelTraining:
     """
@@ -21,7 +22,15 @@ class ModelTraining:
         with open(config_path, "r") as file:
             config = yaml.safe_load(file)
 
-        self.feature_data_path = config["model_training"]["feature_data_path"]
+        # The feature-engineered CSV is defined under the
+        # `feature_engineering` section in config.yaml.
+        self.feature_data_path = config["feature_engineering"].get(
+            "featured_data_path",
+            config["model_training"].get("feature_data_path")
+        )
+        self.scaler_path = config["artifacts"]["scaler_path"]
+        self.window_size = config["model_training"]["window_size"]
+        
 
     def load_feature_data(self):
         """
@@ -146,6 +155,44 @@ class ModelTraining:
 
             logger.error(e)
             raise CustomException(e, sys)
+        
+        
+    def create_sequences(self, X, y):
+        """
+        Create sliding window sequences for RNN/LSTM/GRU models.
+        """
+
+        try:
+
+            logger.info("Creating sliding window sequences...")
+
+            X_seq = []
+            y_seq = []
+
+            for i in range(self.window_size, len(X)):
+
+                X_seq.append(
+                    X[i - self.window_size:i]
+                )
+
+                y_seq.append(
+                    y.iloc[i]
+                )
+
+            X_seq = np.array(X_seq)
+            y_seq = np.array(y_seq)
+
+            logger.info("Sliding window created successfully.")
+
+            logger.info(f"X Shape : {X_seq.shape}")
+            logger.info(f"y Shape : {y_seq.shape}")
+
+            return X_seq, y_seq
+
+        except Exception as e:
+
+            logger.error(e)
+            raise CustomException(e, sys)
 
 
 
@@ -154,5 +201,30 @@ if __name__ == "__main__":
     trainer = ModelTraining()
 
     df = trainer.load_feature_data()
+    
+    X, y = trainer.split_features_target(df)
+
+
+    X_train, X_test, y_train, y_test = trainer.train_test_split_data(
+        X,y
+    )
+    
+    X_train_scaled, X_test_scaled = trainer.scale_data(
+    X_train,X_test
+    )
+    
+    
+    X_train_seq, y_train_seq = trainer.create_sequences(
+        X_train_scaled,
+        y_train
+    )
+
+    X_test_seq, y_test_seq = trainer.create_sequences(
+        X_test_scaled,
+        y_test
+    )
 
     print(df.head())
+    
+    print(X_train_seq.shape)
+    print(y_train_seq.shape)
