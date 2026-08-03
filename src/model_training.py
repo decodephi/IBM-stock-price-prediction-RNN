@@ -5,6 +5,11 @@ import pandas as pd
 from logger import logger
 from exception import CustomException
 
+import os
+import joblib
+
+from sklearn.preprocessing import MinMaxScaler
+
 
 class ModelTraining:
     """
@@ -98,6 +103,48 @@ class ModelTraining:
 
             logger.error(e)
 
+            raise CustomException(e, sys)
+        
+    def scale_data(self, X_train, X_test):
+        """
+        Scale training and testing data using MinMaxScaler.
+        """
+
+        try:
+
+            logger.info("Starting feature scaling...")
+
+            scaler = MinMaxScaler()
+
+            # Fit only on training data
+            X_train_scaled = scaler.fit_transform(X_train)
+
+            # Transform test data
+            X_test_scaled = scaler.transform(X_test)
+
+            # Create artifacts directory
+            os.makedirs(
+            os.path.dirname(self.scaler_path),
+            exist_ok=True
+        )
+
+           # Save scaler
+            joblib.dump(
+                scaler,
+                self.scaler_path
+            )
+
+            logger.info(
+                f"Scaler saved at {self.scaler_path}"
+            )
+
+            logger.info("Feature scaling completed successfully.")
+
+            return X_train_scaled, X_test_scaled
+
+        except Exception as e:
+
+            logger.error(e)
             raise CustomException(e, sys)
 
 
