@@ -33,34 +33,79 @@ class ModelTraining:
 
             logger.info(f"Dataset Shape : {df.shape}")
             
-            logger.info("Separating features and target...")    
-    
-            # Target variable    
-            y = df["Close"]    
-            # Features (remove target and Date)    
-            X = df.drop(columns=["Date", "Close"])    
-    
-            logger.info("Feature and target separation completed.")    
-    
-            logger.info(f"Feature Shape : {X.shape}")    
-            logger.info(f"Target Shape : {y.shape}")    
-    
-            return X, y    
-    
-            return df    
-    
-        except Exception as e:    
-    
-            logger.error(e)    
-    
-            raise CustomException(e, sys)    
-    
-    
-if __name__ == "__main__":    
-    
-    trainer = ModelTraining()    
-    
-    df = trainer.load_feature_data()  
-    X, y = trainer.split_features_target(df)  
-    
-    print(df.head())    
+            
+
+            return df
+
+        except Exception as e:
+
+            logger.error(e)
+
+            raise CustomException(e, sys)
+        
+        
+
+    def split_features_target(self, df):
+        """
+        Separate features (X) and target (y).
+        """
+
+        try:
+
+            logger.info("Separating features and target...")
+
+            # Target variable
+            y = df["Close"]
+
+            # Features (remove target and Date)
+            X = df.drop(columns=["Date", "Close"])
+
+            logger.info("Feature and target separation completed.")
+
+            logger.info(f"Feature Shape : {X.shape}")
+            logger.info(f"Target Shape : {y.shape}")
+
+            return X, y
+
+        except Exception as e:
+
+            logger.error(e)
+            raise CustomException(e, sys)
+        
+    def train_test_split_data(self, X, y, train_size=0.8):
+        """
+        Split the dataset chronologically into training and testing sets.
+        """
+
+        try:
+
+            logger.info("Performing chronological train-test split...")
+
+            split_index = int(len(X) * train_size)
+
+            X_train = X.iloc[:split_index]
+            X_test = X.iloc[split_index:]
+
+            y_train = y.iloc[:split_index]
+            y_test = y.iloc[split_index:]
+
+            logger.info(f"Training samples: {len(X_train)}")
+            logger.info(f"Testing samples: {len(X_test)}")
+
+            return X_train, X_test, y_train, y_test
+
+        except Exception as e:
+
+            logger.error(e)
+
+            raise CustomException(e, sys)
+
+
+
+if __name__ == "__main__":
+
+    trainer = ModelTraining()
+
+    df = trainer.load_feature_data()
+
+    print(df.head())
