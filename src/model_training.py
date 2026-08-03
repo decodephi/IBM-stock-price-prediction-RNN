@@ -32,20 +32,35 @@ class ModelTraining:
             logger.info("Feature dataset loaded successfully.")
 
             logger.info(f"Dataset Shape : {df.shape}")
-
-            return df
-
-        except Exception as e:
-
-            logger.error(e)
-
-            raise CustomException(e, sys)
-
-
-if __name__ == "__main__":
-
-    trainer = ModelTraining()
-
-    df = trainer.load_feature_data()
-
-    print(df.head())
+            
+            logger.info("Separating features and target...")    
+    
+            # Target variable    
+            y = df["Close"]    
+            # Features (remove target and Date)    
+            X = df.drop(columns=["Date", "Close"])    
+    
+            logger.info("Feature and target separation completed.")    
+    
+            logger.info(f"Feature Shape : {X.shape}")    
+            logger.info(f"Target Shape : {y.shape}")    
+    
+            return X, y    
+    
+            return df    
+    
+        except Exception as e:    
+    
+            logger.error(e)    
+    
+            raise CustomException(e, sys)    
+    
+    
+if __name__ == "__main__":    
+    
+    trainer = ModelTraining()    
+    
+    df = trainer.load_feature_data()  
+    X, y = trainer.split_features_target(df)  
+    
+    print(df.head())    
