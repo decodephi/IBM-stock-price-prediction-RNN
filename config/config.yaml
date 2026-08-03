@@ -6,3 +6,6 @@ data_preprocessing:
 
 feature_engineering:
   featured_data_path: data/features/featured_data.csv
+
+model_training:
+  feature_data_path: data/features/featured_data.csv

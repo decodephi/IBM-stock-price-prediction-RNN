@@ -4,6 +4,7 @@ import yaml
 
 from logger import logger
 from exception import CustomException
+import pandas as pd
 
 
 class FeatureEngineering:

@@ -22,6 +22,7 @@ from exception import CustomException
 
 from data_validation import DataValidation
 from data_preprocessing import DataPreprocessing
+from feature_engineering import FeatureEngineering
 
 
 class DataIngestion:
@@ -62,7 +63,7 @@ class DataIngestion:
             raise CustomException(e, sys)
             
      
-"""# Data Ingestion
+# Data Ingestion
 ingestion = DataIngestion()
 df = ingestion.load_data()
 
@@ -72,7 +73,12 @@ validator.validate()
 
 # Data Preprocessing
 preprocessor = DataPreprocessing(df)
-df = preprocessor.preprocess()"""
+df = preprocessor.preprocess()
+
+
+# Engineer_features
+engineer_features = FeatureEngineering(df)
+df = engineer_features.engineer_features()
 
 
 if __name__ == "__main__":
