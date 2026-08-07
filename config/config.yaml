@@ -17,3 +17,7 @@ artifacts:
 
 models:
   lstm_model_path: models/lstm.keras
+
+model_evaluation:
+  model_path: models/lstm.keras
+  evaluation_path: artifacts/evaluation.json
