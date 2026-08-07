@@ -21,6 +21,8 @@ from exception import CustomException
 #data_path = "data/raw/IBM.csv"
 
 from data_validation import DataValidation
+from data_preprocessing import DataPreprocessing
+from feature_engineering import FeatureEngineering
 
 
 class DataIngestion:
@@ -60,17 +62,23 @@ class DataIngestion:
             logger.error(e)
             raise CustomException(e, sys)
             
-'''      
+     
 # Data Ingestion
 ingestion = DataIngestion()
 df = ingestion.load_data()
 
 # Data Validation
 validator = DataValidation(df)
-
 validator.validate()
 
- '''   
+# Data Preprocessing
+preprocessor = DataPreprocessing(df)
+df = preprocessor.preprocess()
+
+
+# Engineer_features
+engineer_features = FeatureEngineering(df)
+df = engineer_features.engineer_features()
 
 
 if __name__ == "__main__":
