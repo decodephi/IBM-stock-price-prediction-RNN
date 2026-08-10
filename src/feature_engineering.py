@@ -2,8 +2,8 @@ import os
 import sys
 import yaml
 
-from logger import logger
-from exception import CustomException
+from src.logger import logger
+from src.exception import CustomException
 import pandas as pd
 
 

@@ -15,14 +15,14 @@ Note -Here only read the raw data and store it in the project's data pipeline.
 from pathlib import Path
 import pandas as pd
 import yaml
-from logger import logger
+from src.logger import logger
 import sys
-from exception import CustomException
+from src.exception import CustomException
 #data_path = "data/raw/IBM.csv"
 
-from data_validation import DataValidation
-from data_preprocessing import DataPreprocessing
-from feature_engineering import FeatureEngineering
+from src.data_validation import DataValidation
+from src.data_preprocessing import DataPreprocessing
+from src.feature_engineering import FeatureEngineering
 
 
 class DataIngestion:
@@ -63,22 +63,6 @@ class DataIngestion:
             raise CustomException(e, sys)
             
      
-# Data Ingestion
-ingestion = DataIngestion()
-df = ingestion.load_data()
-
-# Data Validation
-validator = DataValidation(df)
-validator.validate()
-
-# Data Preprocessing
-preprocessor = DataPreprocessing(df)
-df = preprocessor.preprocess()
-
-
-# Engineer_features
-engineer_features = FeatureEngineering(df)
-df = engineer_features.engineer_features()
 
 
 if __name__ == "__main__":
