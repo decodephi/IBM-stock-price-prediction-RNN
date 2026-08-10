@@ -6,5 +6,8 @@ tensorflow
 matplotlib 
 seaborn
 
-##dyamic
+##Dynamic
 pyyaml
+
+###Mlops
+mlflow
